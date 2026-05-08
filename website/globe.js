@@ -11,14 +11,15 @@
   const DOT_ROWS     = 180;
 
   /* Coffee-origin coordinates [lat, lng] */
+  /* Bahrain — destination for all arcs */
+  const BAHRAIN = { lat: 26.23, lng: 50.59 };
+
   const ORIGINS = [
     { name: 'Ethiopia',    lat:  9.1, lng:  40.5, color: 0xC8A96E },
     { name: 'Colombia',    lat:  4.6, lng: -74.3, color: 0xC8A96E },
     { name: 'Brazil',      lat:-14.2, lng: -51.9, color: 0xC8A96E },
     { name: 'Yemen',       lat: 15.6, lng:  48.5, color: 0xC8A96E },
-    { name: 'Kenya',       lat: -0.0, lng:  37.9, color: 0xC8A96E },
     { name: 'Guatemala',   lat: 15.8, lng: -90.2, color: 0xC8A96E },
-    { name: 'Costa Rica',  lat:  9.7, lng: -83.8, color: 0xC8A96E },
     { name: 'Indonesia',   lat: -6.2, lng: 106.8, color: 0xC8A96E },
   ];
 
@@ -32,8 +33,6 @@
        r * Math.sin(phi) * Math.sin(theta)
     );
   }
-
-  function lerp(a, b, t) { return a + (b - a) * t; }
 
   /* ── main ───────────────────────────────────────────── */
   function initGlobe() {
@@ -146,33 +145,51 @@
       markerGroup.add(dot);
     });
 
-    /* ── Arc lines from origins ────────────────────────── */
+    /* ── Bahrain marker (destination) ─────────────────── */
+    const bahrainPos = latLngToVec3(BAHRAIN.lat, BAHRAIN.lng, GLOBE_RADIUS + 2);
+    const brRing = new THREE.Mesh(
+      new THREE.RingGeometry(5, 9, 24),
+      new THREE.MeshBasicMaterial({ color: 0xFFFFFF, side: THREE.DoubleSide, transparent: true, opacity: 0.9 })
+    );
+    brRing.position.copy(bahrainPos);
+    brRing.lookAt(0, 0, 0);
+    brRing.userData = { pulse: 0, isBahrain: true };
+    markerGroup.add(brRing);
+
+    const brDot = new THREE.Mesh(
+      new THREE.CircleGeometry(4, 16),
+      new THREE.MeshBasicMaterial({ color: 0xFFFFFF, side: THREE.DoubleSide })
+    );
+    brDot.position.copy(bahrainPos);
+    brDot.lookAt(0, 0, 0);
+    markerGroup.add(brDot);
+
+    /* ── Arc lines: origins → Bahrain ─────────────────── */
     const arcGroup  = new THREE.Group();
     scene.add(arcGroup);
     const arcLines  = [];
 
+    const bahrainSurface = latLngToVec3(BAHRAIN.lat, BAHRAIN.lng, GLOBE_RADIUS + 5);
+
     ORIGINS.forEach((o, idx) => {
       const start = latLngToVec3(o.lat, o.lng, GLOBE_RADIUS + 5);
-      const end   = new THREE.Vector3(0, 0, 0); // will update in animate
+      const end   = bahrainSurface.clone();
 
-      /* Build curved arc via QuadraticBezierCurve3 */
-      const mid = start.clone().multiplyScalar(1.55);
-      const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
+      /* Midpoint elevated above the sphere surface for a nice arc */
+      const mid = start.clone().add(end).multiplyScalar(0.5);
+      const elevate = 1.5 + start.distanceTo(end) / (GLOBE_RADIUS * 2);
+      mid.normalize().multiplyScalar(GLOBE_RADIUS * elevate);
 
-      const points  = curve.getPoints(60);
-      const arcGeo  = new THREE.BufferGeometry().setFromPoints(points);
-      const arcMat  = new THREE.LineBasicMaterial({
-        color:       0xC8A96E,
-        transparent: true,
-        opacity:     0,
-      });
-      const line = new THREE.Line(arcGeo, arcMat);
+      const curve  = new THREE.QuadraticBezierCurve3(start, mid, end);
+      const arcGeo = new THREE.BufferGeometry().setFromPoints(curve.getPoints(80));
+      const arcMat = new THREE.LineBasicMaterial({ color: 0xC8A96E, transparent: true, opacity: 0 });
+      const line   = new THREE.Line(arcGeo, arcMat);
       arcGroup.add(line);
 
       arcLines.push({
-        curve, line,
-        phase:  (idx / ORIGINS.length) * Math.PI * 2,
-        speed:  0.45 + Math.random() * 0.25,
+        line,
+        phase: (idx / ORIGINS.length) * Math.PI * 2,
+        speed: 0.4 + Math.random() * 0.2,
       });
     });
 
@@ -259,10 +276,14 @@
       /* Pulse markers */
       markerGroup.children.forEach(child => {
         if (child.userData && child.userData.pulse !== undefined) {
-          child.userData.pulse += dt * 1.4;
-          const s = 1 + 0.35 * Math.sin(child.userData.pulse);
+          child.userData.pulse += dt * (child.userData.isBahrain ? 2.2 : 1.4);
+          const s = child.userData.isBahrain
+            ? 1 + 0.6 * Math.abs(Math.sin(child.userData.pulse))
+            : 1 + 0.35 * Math.sin(child.userData.pulse);
           child.scale.setScalar(s);
-          child.material.opacity = 0.5 + 0.5 * Math.sin(child.userData.pulse);
+          child.material.opacity = child.userData.isBahrain
+            ? 0.6 + 0.4 * Math.abs(Math.sin(child.userData.pulse))
+            : 0.5 + 0.5 * Math.sin(child.userData.pulse);
         }
       });
 

@@ -856,7 +856,7 @@ nav { display: flex; gap: 2.5rem; align-items: center; }
   nav { gap: 1.2rem; }
 
   .hero-cta-group { flex-direction: column; align-items: center; }
-  .btn { width: 220px; }
+  .btn { width: 240px; }
 
   .delivery-grid { grid-template-columns: 1fr; }
 
