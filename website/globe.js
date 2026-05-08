@@ -12,7 +12,6 @@
     { name: 'BRAZIL',    lat: -14.2, lng: -51.9  },
     { name: 'YEMEN',     lat:  15.6, lng:  48.5  },
     { name: 'GUATEMALA', lat:  15.8, lng: -90.2  },
-    { name: 'INDONESIA', lat:  -6.2, lng: 106.8  },
   ];
 
   /* ── coordinate helper ──────────────────────────────── */
