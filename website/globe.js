@@ -108,18 +108,18 @@
       color: 0xffffff, size: 1.0, transparent: true, opacity: 0.5
     })));
 
-    /* ── base sphere (dark ocean) ───────────────────────── */
+    /* ── base sphere (lighter than page bg so globe stands out) ── */
     scene.add(new THREE.Mesh(
       new THREE.SphereGeometry(GLOBE_RADIUS * 0.995, 64, 64),
-      new THREE.MeshBasicMaterial({ color: 0x0D1B2E })
+      new THREE.MeshBasicMaterial({ color: 0x1F3760 })
     ));
 
     /* ── atmosphere glow ────────────────────────────────── */
     scene.add(new THREE.Mesh(
       new THREE.SphereGeometry(GLOBE_RADIUS * 1.14, 32, 32),
       new THREE.MeshBasicMaterial({
-        color: 0x1E3A5F, transparent: true,
-        opacity: 0.20, side: THREE.BackSide
+        color: 0x4A7AB0, transparent: true,
+        opacity: 0.32, side: THREE.BackSide
       })
     ));
 
@@ -131,7 +131,7 @@
 
     /* ── load world map outlines ───────────────────────── */
     const outlineMat = new THREE.LineBasicMaterial({
-      color: 0x2A5080, transparent: true, opacity: 0.65
+      color: 0x3A6BA0, transparent: true, opacity: 0.78
     });
 
     try {
@@ -168,7 +168,7 @@
       const g = new THREE.BufferGeometry();
       g.setAttribute('position', new THREE.Float32BufferAttribute(dotPos, 3));
       globeGroup.add(new THREE.Points(g, new THREE.PointsMaterial({
-        color: 0x2D527E, size: 1.5, transparent: true, opacity: 0.5
+        color: 0x6A95C8, size: 1.6, transparent: true, opacity: 0.72
       })));
     }
 
@@ -311,7 +311,9 @@
     });
 
     /* ── animation loop ─────────────────────────────────── */
-    let rotY = 0, rotX = 0, elapsed = 0;
+    /* start with Bahrain centered on the camera: rotY = PI/2 - (lng+180)*PI/180 */
+    const INIT_ROT_Y = Math.PI / 2 - (BAHRAIN.lng + 180) * Math.PI / 180;
+    let rotY = INIT_ROT_Y, rotX = 0, elapsed = 0;
     const clock = new THREE.Clock();
 
     function syncAll(ry, rx) {
@@ -359,7 +361,7 @@
       /* arc opacity pulse */
       arcLines.forEach(a => {
         a.line.material.opacity =
-          ((Math.sin(elapsed * a.speed + a.phase) + 1) * 0.5) * 0.78;
+          ((Math.sin(elapsed * a.speed + a.phase) + 1) * 0.5) * 0.92;
       });
 
       renderer.render(scene, camera);

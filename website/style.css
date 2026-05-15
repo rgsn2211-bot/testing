@@ -161,9 +161,9 @@ body {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 60% 80% at 50% 50%,
-    transparent 30%,
-    rgba(21, 43, 71, 0.55) 70%,
+  background: radial-gradient(ellipse 70% 95% at 50% 50%,
+    transparent 42%,
+    rgba(21, 43, 71, 0.42) 75%,
     var(--navy-deep) 100%
   );
   pointer-events: none;
@@ -266,7 +266,7 @@ nav { display: flex; gap: 2.5rem; align-items: center; }
   font-weight: 600;
   letter-spacing: 0.12em;
   color: var(--white);
-  text-shadow: 0 0 80px rgba(200,169,110,0.25);
+  text-shadow: 0 0 55px rgba(200,169,110,0.15);
   line-height: 1;
 }
 
@@ -366,24 +366,30 @@ nav { display: flex; gap: 2.5rem; align-items: center; }
 .btn:hover::before { opacity: 1; }
 
 .btn-primary {
-  background: var(--gold);
+  background: rgba(200, 169, 110, 0.88);
   color: var(--navy-deep);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(200, 169, 110, 0.6);
 }
 .btn-primary:hover {
-  background: var(--gold-light);
+  background: var(--gold);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(200,169,110,0.3);
+  box-shadow: 0 8px 24px rgba(200,169,110,0.28);
 }
 
 .btn-ghost {
-  background: transparent;
-  color: var(--white);
-  border: 1px solid rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.78);
+  border: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
 }
 .btn-ghost:hover {
-  border-color: var(--white);
+  border-color: rgba(255,255,255,0.5);
+  color: var(--white);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(255,255,255,0.08);
+  box-shadow: 0 8px 24px rgba(255,255,255,0.06);
 }
 
 
