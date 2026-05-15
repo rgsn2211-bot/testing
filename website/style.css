@@ -388,24 +388,6 @@ nav { display: flex; gap: 2.5rem; align-items: center; }
 
 
 /* ═══════════════════════════════════════════════════════════
-   BAHRAIN SKYLINE STRIP — echoes the brand cup design
-═══════════════════════════════════════════════════════════ */
-.bahrain-strip {
-  position: relative;
-  width: 100%;
-  background: var(--navy-deep);
-  overflow: hidden;
-  line-height: 0;
-}
-
-.bahrain-skyline {
-  display: block;
-  width: 100%;
-  height: clamp(180px, 28vw, 360px);
-}
-
-
-/* ═══════════════════════════════════════════════════════════
    ORIGIN TICKER
 ═══════════════════════════════════════════════════════════ */
 .origin-ticker {
