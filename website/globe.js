@@ -78,11 +78,10 @@
 
     const scene  = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 3000);
+    camera.position.set(0, 0, 680);
 
-    const isMobile = window.innerWidth < 768;
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    camera.position.set(0, 0, isMobile ? 540 : 680);
 
     function resize() {
       const w = canvas.clientWidth, h = canvas.clientHeight;
@@ -210,7 +209,7 @@
     const brPos  = latLngToVec3(BAHRAIN.lat, BAHRAIN.lng, GLOBE_RADIUS + 2);
 
     const brRingOuter = new THREE.Mesh(
-      new THREE.RingGeometry(9, 14, 32),
+      new THREE.RingGeometry(7, 11, 32),
       new THREE.MeshBasicMaterial({
         color: 0xFFFFFF, side: THREE.DoubleSide,
         transparent: true, opacity: 0.55
@@ -222,7 +221,7 @@
     markerGroup.add(brRingOuter);
 
     const brRingInner = new THREE.Mesh(
-      new THREE.RingGeometry(5, 9, 24),
+      new THREE.RingGeometry(4, 7, 24),
       new THREE.MeshBasicMaterial({
         color: 0xFFFFFF, side: THREE.DoubleSide,
         transparent: true, opacity: 0.9
@@ -312,9 +311,7 @@
     });
 
     /* ── animation loop ─────────────────────────────────── */
-    /* face Bahrain on load: rotY = PI/2 - theta where theta = (lng+180)*PI/180 */
-    const INIT_ROT_Y = Math.PI / 2 - (BAHRAIN.lng + 180) * Math.PI / 180;
-    let rotY = INIT_ROT_Y, rotX = 0, elapsed = 0, spinDelay = 1.6;
+    let rotY = 0, rotX = 0, elapsed = 0;
     const clock = new THREE.Clock();
 
     function syncAll(ry, rx) {
@@ -328,8 +325,7 @@
       elapsed += dt;
 
       if (!isDragging) { rotVel.y *= 0.97; rotVel.x *= 0.97; }
-      if (spinDelay > 0) spinDelay -= dt;
-      rotY += (spinDelay <= 0 ? 0.0012 : 0) + rotVel.y;
+      rotY += 0.0016 + rotVel.y;
       rotX  = Math.max(-0.5, Math.min(0.5, rotX + rotVel.x));
       syncAll(rotY, rotX);
 
