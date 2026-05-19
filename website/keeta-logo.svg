@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- teal background -->
+  <rect width="200" height="200" rx="36" ry="36" fill="#15B8A6"/>
+  <!-- large yellow circle (top half) -->
+  <circle cx="100" cy="82" r="105" fill="#FFE200"/>
+  <!-- clip bottom of yellow circle to card -->
+  <rect x="0" y="138" width="200" height="62" fill="#15B8A6"/>
+  <!-- keeta text -->
+  <text
+    x="100" y="122"
+    font-family="'Helvetica Neue', Arial, sans-serif"
+    font-weight="900"
+    font-size="58"
+    fill="#1A1A1A"
+    text-anchor="middle"
+    letter-spacing="-2"
+  >keeta</text>
+  <!-- smile arc under second e -->
+  <path d="M 72 136 Q 100 155 128 136" stroke="#1A1A1A" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <!-- smile dots -->
+  <circle cx="68" cy="139" r="4.5" fill="#1A1A1A"/>
+  <circle cx="132" cy="139" r="4.5" fill="#1A1A1A"/>
+</svg>
